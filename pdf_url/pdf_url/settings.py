@@ -14,7 +14,7 @@ BOT_NAME = 'pdf_url'
 SPIDER_MODULES = ['pdf_url.spiders']
 NEWSPIDER_MODULE = 'pdf_url.spiders'
 
-
+LOG_LEVEL = 'CRITICAL'
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'pdf_url (+http://www.yourdomain.com)'
 
