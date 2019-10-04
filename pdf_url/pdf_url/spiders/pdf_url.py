@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import scrapy
+import re 
+from ..items import PdfUrlItem
 from scrapy.spiders import CrawlSpider, Rule
 from scrapy.linkextractors import LinkExtractor
 
@@ -23,16 +25,21 @@ class PdfUrlSpider(CrawlSpider):
     rules = [Rule(LinkExtractor(allow=''), callback='parse_httpresponse' , follow=True)]
 
 
-def parse_httpresponse(self,response):
+    def parse_httpresponse(self,response):
 
-    print(response)
-    # check if the link goes to a pdf
+        print(response.url)
+        item = PdfUrlItem()
 
-    # if it does, scrape it
-
-    #if not, ignore it and move on to the next link
-
-    # write that data to the csv
-
-
-    return
+        # check if the link goes to a pdf
+        # if it does, scrape it
+        #if not, ignore it and move on to the next link
+        if ('Content-Type' in response.headers.keys()) and ('pdf' in response.headers['Content-Type']):
+            if 'Content-Disposition' in response.headers.keys():
+                ContentDisposition = str(response.headers['Content-Disposition'])
+                item['filename'] = re.search('filename="(.+)"', ContentDisposition).group(1)
+            else:
+                item['filename'] = response.url.split('/')[-1]
+            item['url'] = response.url
+ 
+        # write that data to the csv
+        return item
